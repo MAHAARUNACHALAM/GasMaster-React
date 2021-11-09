@@ -7,35 +7,74 @@ import {
 	Dimensions,
 } from "react-native";
 import { Camera } from "expo-camera";
+// import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
+import * as ImageManipulator from "expo-image-manipulator";
 
-export default function Capture() {
+export default function Capture({ navigation }) {
 	const [hasPermission, setHasPermission] = useState(null);
 	const dimensions = useRef(Dimensions.get("window"));
 	const screenWidth = dimensions.current.width;
+	const screenHeight = dimensions.current.height;
 	const height = Math.round((screenWidth * 16) / 9);
 	const ref = React.createRef();
 
-	// takePicture = async function () {
-	// 	if (this.camera) {
-	// 		this.camera.takePicture().then((data) => {
-	// 			FileSystem.moveAsync({
-	// 				from: data,
-	// 				to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
-	// 			}).then(() => {
-	// 				this.setState({
-	// 					photoId: this.state.photoId + 1,
-	// 				});
-	// 				Vibration.vibrate();
-	// 			});
-	// 		});
-	// 	}
-	// };
-	const takePicture = async () => {
+	const takePicture = async (evt) => {
+		// const options = { quality: 0.5, base64: true };
+		// const data = await ref.current.takePictureAsync(options);
+		// cropData = {
+		// 	offset: { x: 0, y: evt },
+		// 	size: { width: 480, height: 100 },
+		// 	// displaySize: { width: 480, height: 100 },
+		// 	// resizeMode: 'contain/cover/stretch'
+		// };
+
+		// console.log("dataURi is: ", data.uri);
+
+		// ImageEditor.cropImage(data.uri, cropData)
+		// 	.then((url) => {
+		// 		console.log("Cropped image uri", url);
+		// 	})
+		// 	.catch((error) => {
+		// 		console.log("Error is: ", error);
+		// 	});
+
+		// let resizedUri = await new Promise((resolve, reject) => {
+		// 	ImageEditor.cropImage(
+		// 		data.uri,
+		// 		{
+		// 			offset: { x: 0, y: evt },
+		// 			size: { width: 480, height: 100 },
+		// 			// displaySize: { width: 480, height: 100 },
+		// 			// resizeMode: 'contain/cover/stretch'
+		// 		},
+		// 		(uri) => resolve(uri),
+		// 		() => reject()
+		// 	);
+		// });
+
 		if (ref.current) {
 			const options = { quality: 0.5, base64: true };
 			const data = await ref.current.takePictureAsync(options);
+			console.log("screen width", screenWidth);
+			console.log("screen Height", screenHeight);
+			console.log("width", data.width);
+			console.log("height", data.height);
+			const crop1 = await ImageManipulator.manipulateAsync(data.uri, [
+				{
+					crop: {
+						originX: 0,
+						originY: evt * 5,
+						width: data.width,
+						height: 100,
+					},
+				},
+			]);
+			console.log("croped", crop1.width);
 
 			console.log(data.uri);
+			console.log(`x coord = ${evt}`);
+
+			navigation.navigate("Display", { photo: crop1 });
 		}
 	};
 	// const [type, setType] = useState(Camera.Constants.Type.back);
@@ -57,7 +96,7 @@ export default function Capture() {
 	return (
 		<View style={styles.container}>
 			<Camera
-				style={{ flex: 1, height: height, width: "100%" }}
+				style={{ flex: 1, height: height, width: screenWidth }}
 				type={Camera.Constants.Type.back}
 				ratio="16:9"
 				ref={ref}
@@ -65,35 +104,31 @@ export default function Capture() {
 				// 	this.camera = ref;
 				// }}
 			>
-				<View style={styles.buttonContainer}>
-					<TouchableOpacity
+				<TouchableOpacity
+					style={{
+						flex: 1,
+						justifyContent: "flex-end",
+						alignContent: "center",
+						alignItems: "center",
+					}}
+					onPress={(evt) => {
+						takePicture(evt.nativeEvent.locationY);
+					}}
+				>
+					<View
 						style={{
-							flex: 0,
-							justifyContent: "flex-end",
-							alignContent: "center",
+							position: "absolute",
+							top: 0,
+							left: 0,
+							width: "100%",
+							height: "100%",
+							backgroundColor: "rgba(0.2, 0.2, 0.2, 0.2)",
 							alignItems: "center",
+							justifyContent: "space-around",
+							flex: 0,
 						}}
-						// onPress={async () => {
-						// 	let photo = await this.camera.takePictureAsync({
-						// 		quality: 0.5,
-						// 		base64: true,
-						// 		skipProcessing: true,
-						// 		ratio: "16:9",
-						// 	});
-						// 	const source = photo;
-						// 	console.log(source);
-						// 	// this.camera.current.pausePreview();
-						// 	// await handleSave(source);
-						// 	// this.camera.current.resumePreview();
-						// }}
-						onPress={takePicture}
-					>
-						<Text style={{ fontSize: 25, color: "white", marginLeft: 110 }}>
-							{" "}
-							Snap{" "}
-						</Text>
-					</TouchableOpacity>
-				</View>
+					></View>
+				</TouchableOpacity>
 			</Camera>
 		</View>
 	);

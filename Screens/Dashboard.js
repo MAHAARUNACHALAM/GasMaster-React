@@ -17,16 +17,18 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { QrImg } from "../assets/QR.png";
+
 export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			GridViewItems: [
-				{ key: "5 Kcal/kg", key1: require("./D1.png") },
+				// { key: "5 Kcal/kg", key1: require("./D1.png") },
 				{ key: "Generate Bill", key1: require("./QR.png") },
-				{ key: "View History", key1: require("./History.png") },
-				{ key: "Gas Usage", key1: require("./Usage.png") },
+				// { key: "View History", key1: require("./History.png") },
+				// { key: "Gas Usage", key1: require("./Usage.png") },
 			],
 		};
 	}

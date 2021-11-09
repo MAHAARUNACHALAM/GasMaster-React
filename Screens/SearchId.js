@@ -36,7 +36,7 @@ export default class SearchId extends React.Component {
 				<View style={styles.buttonAllign}>
 					<Pressable
 						style={styles.loginBtn}
-						onPress={() => this.props.navigation.navigate("ScanQr")}
+						onPress={() => this.props.navigation.navigate("Detection")}
 					>
 						<Text style={styles.loginText}>ScanQr</Text>
 					</Pressable>
