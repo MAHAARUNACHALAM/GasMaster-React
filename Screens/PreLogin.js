@@ -11,11 +11,12 @@ import {
 
 import Login from "./Login";
 import App from "../App";
+import Bottom from "../components/Bottom";
 
 export default function PreLogin({ navigation }) {
 	return (
 		<View style={styles.container}>
-			<Image style={styles.imagelogo} source={require("./icon.png")} />
+			<Image style={styles.imagelogo} source={require("../assets/icon.png")} />
 
 			<Text style={styles.logo}>LPG Gas Meter</Text>
 
@@ -29,12 +30,7 @@ export default function PreLogin({ navigation }) {
 				<Text style={styles.loginText}>SignUp</Text>
 			</TouchableOpacity>
 
-			<View style={styles.atsuya}>
-				<Image
-					source={require("./Atsuya.png")}
-					style={{ width: 150, height: 50 }}
-				/>
-			</View>
+			<Bottom />
 		</View>
 	);
 }

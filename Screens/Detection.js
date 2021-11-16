@@ -8,7 +8,26 @@ import * as blazeface from "@tensorflow-models/blazeface";
 import * as jpeg from "jpeg-js";
 export default function Detection() {
 	const [imageLink, setImageLink] = useState(
-		"https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/1.jpg?alt=media&token=4b50341c-8e52-4960-ab20-93714f0ee6f9.jpg"
+		// 8"https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/1.jpg?alt=media&token=4b50341c-8e52-4960-ab20-93714f0ee6f9.jpg"
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7694.jpg?alt=media&token=340346ff-df70-494d-afc5-72f7bd54a5b8"
+		// 5
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7582.jpg?alt=media&token=c5758d20-b9ad-4738-8c9f-a994572ce710"
+		// 9
+		"https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7213.jpg?alt=media&token=edd008d3-a26e-4a8e-9f64-4b443348540f"
+		// 2
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7286.jpg?alt=media&token=0787bd6a-74ce-449a-bae7-c1380ff833bd"
+		// 3 8
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7310.jpg?alt=media&token=a5719a1e-61d5-402e-8932-4dc6db95a0fa"
+		// 4
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7470.jpg?alt=media&token=0bceb108-38a4-488a-bbfe-557811fefe40"
+		// 1
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7471.jpg?alt=media&token=ebfd0d2e-05f3-4c37-9596-2b82d3762fc7"
+		// 7 8
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7543.jpg?alt=media&token=2585b5d0-42d4-42f8-a64b-234257bfdbed"
+		// 7 8
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7854.jpg?alt=media&token=2167461c-735d-4967-828e-4df458deb923"
+		// 7
+		// "https://firebasestorage.googleapis.com/v0/b/lpggasmaster1.appspot.com/o/7870.jpg?alt=media&token=53a781c0-fc67-48e9-8649-6ec2ec431d6e"
 	);
 	const [isEnabled, setIsEnabled] = useState(true);
 	const [faces, setFaces] = useState([]);
@@ -24,7 +43,7 @@ export default function Detection() {
 			try {
 				const modelJson = await require("../assets/model/model.json");
 				const modelWeight = await require("../assets/model/group1-shard.bin");
-				const maskDetector = await tf.loadLayersModel(
+				const maskDetector = await tf.loadGraphModel(
 					bundleResourceIO(modelJson, modelWeight)
 				);
 				setMaskDetector(maskDetector);
@@ -38,7 +57,7 @@ export default function Detection() {
 			//Assign model to variable
 
 			// setFaceDetector(faceDetector);
-			console.log("[+] Model Loaded");
+			// console.log("[+] Model Loaded");
 		}
 		loadModel();
 	}, []);
@@ -160,11 +179,18 @@ export default function Detection() {
 					console.log("[+] Retrieving image from link :" + imageLink);
 					const response = await fetch(imageLink, {}, { isBinary: true });
 					const rawImageData = await response.arrayBuffer();
-					const imageTensor = imageToTensor(rawImageData).resizeBilinear([
+					var imageTensor = imageToTensor(rawImageData).resizeBilinear([
 						224, 224,
 					]);
-					let result = await maskDetector.predict(imageTensor).data();
-					console.log(result);
+					imageTensor = imageTensor.reshape([1, 224, 224, 3]).toInt();
+					// const output1 = await maskDetector.executeAsync(imageTensor).data();
+					const output = await maskDetector.executeAsync(imageTensor);
+					const boxes = output[0].dataSync();
+					const scores = output[4].arraySync();
+					const classes = output[1].arraySync();
+					console.log(scores[0][0] - 1);
+					// let result = await maskDetector.predict(imageTensor).data();
+					// console.log(output);
 				}}
 				disabled={!isEnabled}
 			/>

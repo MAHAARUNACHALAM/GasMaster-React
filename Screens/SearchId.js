@@ -11,6 +11,7 @@ import {
 	Pressable,
 } from "react-native";
 import { Fragment } from "react";
+import Bottom from "../components/Bottom";
 
 export default class SearchId extends React.Component {
 	state = {
@@ -20,7 +21,10 @@ export default class SearchId extends React.Component {
 		return (
 			<Fragment>
 				<View style={styles.container}>
-					<Image style={styles.imagelogo} source={require("./icon.png")} />
+					<Image
+						style={styles.imagelogo}
+						source={require("../assets/icon.png")}
+					/>
 
 					<Text style={styles.logo}>LPG Gas Meter</Text>
 
@@ -42,17 +46,12 @@ export default class SearchId extends React.Component {
 					</Pressable>
 					<Pressable
 						style={styles.loginBtn}
-						onPress={() => this.props.navigation.navigate("Camera")}
+						onPress={() => this.props.navigation.navigate("Dashboard")}
 					>
 						<Text style={styles.loginText}>Next</Text>
 					</Pressable>
 				</View>
-				<View style={styles.atsuya}>
-					<Image
-						source={require("./Atsuya.png")}
-						style={{ width: 150, height: 50 }}
-					/>
-				</View>
+				<Bottom />
 			</Fragment>
 		);
 	}
@@ -79,12 +78,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	atsuya: {
-		flex: 1,
-		backgroundColor: "#FFFFFF",
-		alignItems: "center",
-		justifyContent: "flex-end",
-	},
+
 	logo: {
 		fontWeight: "bold",
 		fontSize: 35,

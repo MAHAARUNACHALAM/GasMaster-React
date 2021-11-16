@@ -7,16 +7,42 @@ import {
 	TouchableOpacity,
 	Image,
 } from "react-native";
+import Bottom from "../components/Bottom";
+import firebase from "../firebase";
+// import { EmailAuthProvider } from "firebase/auth";
 
 export default class Login extends React.Component {
 	state = {
 		email: "",
 		password: "",
+		errorMessage: null,
+	};
+	handleLogin = () => {
+		const { email, password, errorMessage } = this.state;
+		console.log(email, password);
+		// const credential = EmailAuthProvider.credential(email, password);
+		// console.log(credential);
+		try {
+			console.log("login");
+			firebase
+				.auth()
+				.signInWithEmailAndPassword(email, password)
+				.then(() => {
+					this.props.navigation.navigate("SearchId");
+					console.log("Login Success");
+				});
+			// .catch((error) => this.setState({ errorMessage: error.message }));
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	render() {
 		return (
 			<View style={styles.container}>
-				<Image style={styles.imagelogo} source={require("./icon.png")} />
+				<Image
+					style={styles.imagelogo}
+					source={require("../assets/icon.png")}
+				/>
 
 				<Text style={styles.logo}>LPG Gas Meter</Text>
 
@@ -39,17 +65,12 @@ export default class Login extends React.Component {
 				</View>
 				<TouchableOpacity
 					style={styles.loginBtn}
-					onPress={() => this.props.navigation.navigate("SearchId")}
+					onPress={() => this.handleLogin()}
 				>
 					<Text style={styles.loginText}>LOGIN</Text>
 				</TouchableOpacity>
 
-				<View style={styles.atsuya}>
-					<Image
-						source={require("./Atsuya.png")}
-						style={{ width: 150, height: 50 }}
-					/>
-				</View>
+				<Bottom />
 			</View>
 		);
 	}

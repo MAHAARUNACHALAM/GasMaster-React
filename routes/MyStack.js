@@ -9,12 +9,16 @@ import SearchId from "../Screens/SearchId";
 import Capture from "../Screens/Capture";
 import DisplayScreen from "../Screens/DisplayScreen";
 import Detection from "../Screens/Detection";
+import GasBillSystems from "../Screens/GasBillSystems";
+import firebase from "../firebase";
+
 const Stack = createStackNavigator();
 const MyStack = () => {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator
-				initialRouteName="PreLogin"
+				// initialRouteName={firebase.auth().currentUser ? "SearchId" : "PreLogin"}
+				initialRouteName={"PreLogin"}
 				screenOptions={{ headerShown: false }}
 			>
 				<Stack.Screen name="PreLogin" component={PreLogin} />
@@ -25,6 +29,7 @@ const MyStack = () => {
 				<Stack.Screen name="Camera" component={Capture} />
 				<Stack.Screen name="Display" component={DisplayScreen} />
 				<Stack.Screen name="Detection" component={Detection} />
+				<Stack.Screen name="GasBillSystems" component={GasBillSystems} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
